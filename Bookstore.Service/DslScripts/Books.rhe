@@ -1,0 +1,101 @@
+﻿// Module Bookstore;
+
+// Entity Bookstore.Book;
+
+//Shortstring Bookstore.Book.Code { AutoCode; }
+//Shortstring Bookstore.Book.Title;
+//Integer Bookstore.Book.NumberOfPages;
+//Reference Bookstore.Book.Author Bookstore.Person;
+
+//Itemfilter Bookstore.Book.CommonMisspelling 'book => book.Title.Contains("curiousity")';
+//InvalidData Bookstore.Book.CommonMisspelling 'It is not allowed to enter misspelled word "curiousity"';
+
+//Logging Bookstore.Book;
+
+Module Bookstore
+{
+    Entity Book
+    {
+        ShortString Code { Unique; Required; }
+        ShortString Title { Required; }
+        Integer NumberOfPages;
+        Reference Author Bookstore.Person;
+    }
+
+    Entity Person
+    {
+        ShortString Name;
+    }
+
+    Entity Comment
+    {
+        Reference Book { Detail; }
+        LongString Text;
+    }
+
+    Entity ChildrensBook
+    {
+        Extends Bookstore.Book;
+
+        Integer AgeFrom;
+        Integer AgeTo;
+        IntegerRange AgeFrom AgeTo;
+    }
+
+    Entity ForeignBook
+    {
+        Extends Bookstore.Book;
+
+        ShortString OriginalLanguage;
+        Reference Translator Bookstore.Person;
+    }
+
+    Entity Topic
+    {
+        ShortString Name { Unique; Required; }
+    }
+
+    Entity BookTopic
+    {
+        Reference Book { Detail; }
+        Reference Topic { Required; }
+
+        UniqueMultiple 'Book Topic';
+    }
+
+    // Moji entiteti: nisu iz Rhetos Wiki-a.
+    Entity Employee 
+    {
+        ShortString Name;
+        ShortString VAT { Unique; }
+    }
+
+    Entity Manager
+    {
+        Extends Bookstore.Employee;
+        ShortString BonusInformation;
+    }
+
+    Entity Education
+    {
+        Reference Employee;
+        Date EducationDate;
+        ShortString Description;
+    }
+
+    Entity Department
+    {
+        ShortString Code { Unique; }
+        ShortString Description;
+
+        // Ovako sam shvatio iz Wiki-a, mozda treba ici UniqueMultiple 'Code Description'; ?
+    }
+
+    Entity EmployeeDepartment
+    {
+        Reference Employee;
+        Reference Department;
+
+        UniqueMultiple 'Employee Department';
+    }
+}

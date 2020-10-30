@@ -367,3 +367,5 @@ FodyWeavers.xsd
 /Bookstore.Service/Resources
 /Bookstore.Service/ConnectionStrings.config
 /Bookstore.Service/ExternalAppSettings.config
+
+rhetos-app.local.settings.json
