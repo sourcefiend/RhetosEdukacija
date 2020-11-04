@@ -1,0 +1,11 @@
+﻿Module Bookstore
+{
+	SqlQueryable BookInfo <SQL\BookInfo.sql>
+    
+    {
+        Extends Bookstore.Book;
+        Integer NumberOfComments;
+
+        AutodetectSqlDependencies;
+    }
+}

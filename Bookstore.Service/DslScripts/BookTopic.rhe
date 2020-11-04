@@ -1,0 +1,10 @@
+﻿Module Bookstore
+{
+	SqlQueryable BookTopicList <SQL\BookTopic.sql>
+	{
+		Extends Bookstore.Book;
+		Integer NumberOfTopics;
+
+		AutodetectSqlDependencies;
+	}
+}

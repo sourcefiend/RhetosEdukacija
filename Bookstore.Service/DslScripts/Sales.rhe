@@ -1,0 +1,22 @@
+﻿Module Sales
+{
+	Entity Price
+	{
+		Reference Book Bookstore.Book;
+		Money MSRP { Required; }
+		Money HighestPossibleBid { MaxValue 50; }
+		ShortString PriceCode { AutoCode; DefaultValue 'item => "PRICE+++"'; }
+		DateTime EnteredOn { CreationTime; }
+		DateTime MSRPModified { ModificationTimeOf Sales.Price.MSRP;}
+	}
+
+	Entity Stats
+	{
+		Reference Book Bookstore.Book;
+		Integer BestRating { MinValue 1; MaxValue 5; }
+		Integer CopiesSold { DenyUserEdit; }
+
+		Deactivatable;
+		Logging { AllProperties; }
+	}
+}

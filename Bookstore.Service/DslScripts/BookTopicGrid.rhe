@@ -1,0 +1,9 @@
+﻿Module Bookstore
+{
+	Browse BookTopicGrid Bookstore.Book
+	{
+		Take Title;
+		Take 'Author.Name';
+		Take 'Extension_BookTopicList.NumberOfTopics';
+	}
+}

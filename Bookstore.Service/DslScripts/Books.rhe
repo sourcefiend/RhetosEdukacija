@@ -16,11 +16,56 @@ Module Bookstore
 {
     Entity Book
     {
-        ShortString Code { Unique; Required; }
+        ShortString Code { Unique; Required; AutoCode; }
         ShortString Title { Required; }
         Integer NumberOfPages;
         Reference Author Bookstore.Person;
+
+        ItemFilter CommonMisspelling 'book => book.Title.Contains("curiousity")';
+        InvalidData CommonMisspelling 'It is not allowed to enter misspelled word "curiousity".';
+
+         ComposableFilterBy LongBooks2 '(query, repository, parameter) =>
+            {
+                return query.Where(item => item.NumberOfPages >= 500);
+            }';
+
+         ComposableFilterBy BooksBegginingWithA '(query, repository, parameter) =>
+            {
+                return query.Where(item => item.Title.First() == "A".ToCharArray()[0]);
+            }';
+
+        FilterBy ComplexSearch '(repository, parameter) =>
+        {
+            var query = repository.Bookstore.Book.Query(item => item.NumberOfPages >= parameter.MinimumPages);
+            if (parameter.ForeignBooksOnly == true)
+                query = query.Where(item => item.Extension_ForeignBook.ID != null);
+            Book[] books = query.ToSimple().ToArray();
+
+            if (parameter.MaskTitles == true)
+                foreach (var book in books.Where(b => !string.IsNullOrEmpty(b.Title)))
+                    book.Title = book.Title.First() + "***" + book.Title.Last();
+
+            return books;
+        }';
     }
+
+    Parameter LongBooks2
+    {
+
+    }
+
+    Parameter BooksBegginingWithA
+    {
+
+    }
+
+    Parameter ComplexSearch
+    {
+        Integer MinimumPages;
+        Bool ForeignBooksOnly;
+        Bool MaskTitles;
+    }
+
 
     Entity Person
     {
@@ -97,5 +142,20 @@ Module Bookstore
         Reference Department;
 
         UniqueMultiple 'Employee Department';
+    }
+
+    Action CreateBook '(parameter, repository, userInfo) =>
+    {
+        for (int i = 0; i < parameter.NumberOfBooks; i++)
+        {
+            string newTitle = parameter.TitlePrefix + " - " + (i + 1);
+            var newBook = new Bookstore.Book { Code = "+++", Title = newTitle };
+            repository.Bookstore.Book.Insert(newBook);
+        }
+    }'
+
+    {
+        Integer NumberOfBooks;
+        ShortString TitlePrefix;
     }
 }
